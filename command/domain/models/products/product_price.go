@@ -17,7 +17,7 @@ func (ins *ProductPrice) Value() uint32 {
 }
 
 // コンストラクタ
-func NewProductPrice(value uin32) (*ProductPrice, *errs.DomainError) {
+func NewProductPrice(value uint32) (*ProductPrice, *errs.DomainError) {
 	const MIN_VALUE = 50   // 最小単価
 	const MAX_VALUE = 1000 // 最大単価
 	if value < MIN_VALUE || value > MAX_VALUE {
