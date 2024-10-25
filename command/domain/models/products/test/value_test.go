@@ -37,7 +37,7 @@ var _ = Describe("Productエンティティを構成のするオブジェクト"
 			})
 		})
 		// UUID 形式の検証
-		Context("UUID形式の検証", Label("UUID 形式"), func() {
+		Context("UUID形式の検証", Label("UUID形式"), func() {
 			It("uuid以外のの文字列の場合、errs.DomainErrorが返る", func() {
 				Expect(not_uuid).To(
 					Equal(errs.NewDomainError("商品IDはUUIDの形式でなければなりません。")))
