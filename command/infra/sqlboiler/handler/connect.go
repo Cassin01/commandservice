@@ -15,7 +15,7 @@ import (
 type DBConfig struct {
 	Dbname string `toml:"dbname"` // データベース名
 	Host   string `toml:"host"`   // ホスト名
-	Port   int64  `toml:port`     // ポート番号
+	Port   int64  `toml:"port"`   // ポート番号
 	User   string `toml:"user"`   // ユーザ名
 	Pass   string `toml:"pass"`   // パスワード
 }
@@ -23,7 +23,7 @@ type DBConfig struct {
 // database.tomlから接続情報を取得してDbConfig型で返す
 func tomlRead() (*DBConfig, error) {
 	// 環境変数からファイルパスを取得する
-	path := os.Getenv("DABASE_TOML_PATH")
+	path := os.Getenv("DATABASE_TOML_PATH")
 	if path == "" {
 		// 環境変数が無い場合のパスを設定する
 		path = "infra/sqlboiler/config/database.toml"
@@ -40,18 +40,18 @@ func tomlRead() (*DBConfig, error) {
 
 // データベース接続
 func DBConnect() error {
+	fmt.Println("DBConnect")
 	config, err := tomlRead() // database.tomlの定義内容を読み取る
 	if err != nil {
 		return DBErrHandler(err)
 	}
 	// 接続文字列を生成する
 	rdbms := "mysql"
-	connect_str := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s",
-		config.User, config.Pass, config.Host, config.Port, config.Dbname)
+	connect_str := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", config.User, config.Pass, config.Host, config.Port, config.Dbname)
 	// データベースに接続する
 	conn, err := sql.Open(rdbms, connect_str)
 	if err != nil {
-		return DBErrorHandle(err)
+		return DBErrHandler(err)
 	}
 	// データベース接続を確認する
 	if err = conn.Ping(); err != nil {
