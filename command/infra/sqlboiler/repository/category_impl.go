@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 
 	"commandservice/errs"
 	"commandservice/infra/sqlboiler/handler"
@@ -95,5 +96,36 @@ func (rep *categoryRepositorySQLBoiler) DeleteById(ctx context.Context, tran *sq
 	if _, err = del_model.Delete(ctx, tran); err != nil {
 		return handler.DBErrHandler(err)
 	}
+	return nil
+}
+
+// コンストラクタ
+func NewCategoryRepositorySQLBoiler() categories.CategoryRepository {
+	// フック関数の登録
+	models.AddCategoryHook(boil.AfterInsertHook, CategoryAfterInsertHook)
+	models.AddCategoryHook(boil.AfterUpdateHook, CategoryAfterUpdateHook)
+	models.AddCategoryHook(boil.AfterDeleteHook, CategoryAfterDeleteHook)
+	return &categoryRepositorySQLBoiler{}
+}
+
+// 登録処理後に実行されるフック
+func CategoryAfterInsertHook(ctx context.Context, exec boil.ContextExecutor,
+	category *modles.Category,
+) error {
+	log.Printf("カテゴリID:%s カテゴリ名:%sを登録しました。\n", category.ObjID, category.Name)
+	return nil
+}
+
+// 変更処理後に実行されるフック
+func CategoryAfterUpdateHook(ctx context.Context, exec boil.ContextExecutor,
+	category *models.Category,
+) error {
+	log.Printf("カテゴリID:%s カテゴリ名:%sを変更しました。\n", category.ObjID, category.Name)
+	return nil
+}
+
+// 削除処理後に実行されるフック
+func CategoryAfterDeleteHook(ctx context.Context, exec boil.ContextExecutor, category *models.Category) error {
+	log.Printf("カテゴリID:%s カテゴリ名:%sを削除しました。\n", category.ObjID, category.Name)
 	return nil
 }
