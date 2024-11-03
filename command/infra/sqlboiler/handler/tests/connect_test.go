@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"commandservice/infra/ssqlboiler/handler"
+	"commandservice/infra/sqlboiler/handler"
 
-	. "github.com/onsi/ginkgo/gomega"
 	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 func TestConn(t *testing.T) {

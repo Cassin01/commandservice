@@ -13,7 +13,7 @@ import (
 // データベースアクセスエラーのハンドリング
 func DBErrHandler(err error) error {
 	var opErr *net.OpError
-	var diverErr *mysql.MySQLError
+	var driverErr *mysql.MySQLError
 	// 接続がタイムアプトかネットワーク関連の問題が原因で接続が確率できない?
 	if errors.As(err, &opErr) {
 		log.Println(err.Error())

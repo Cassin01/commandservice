@@ -6,23 +6,24 @@ import (
 	"fmt"
 	"log"
 
+	"commandservice/domain/models/categories"
 	"commandservice/errs"
 	"commandservice/infra/sqlboiler/handler"
 	"commandservice/infra/sqlboiler/models"
 
-	"github.com/volatiletech/sqlboiler/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 // CategoryRepositoryインターフェースの実装
 type categoryRepositorySQLBoiler struct{}
 
 // コンストラクタ
-func NewcategoryRepositorySQLBoiler() CategoryRepository {
+func NewcategoryRepositorySQLBoiler() categories.CategoryRepository {
 	// フック関数の登録
-	modles.AddCategoryHook(boil.AfterInsertHook, CategoryAfterInsertHook)
-	modles.AddCategoryHook(boil.AfterUpdateHook, CategoryAfterUpdateHook)
-	modles.AddCategoryHook(boil.AfterDeleteHook, categoryAfterDeleteHook)
+	models.AddCategoryHook(boil.AfterInsertHook, CategoryAfterInsertHook)
+	models.AddCategoryHook(boil.AfterUpdateHook, CategoryAfterUpdateHook)
+	models.AddCategoryHook(boil.AfterDeleteHook, CategoryAfterDeleteHook)
 	return &categoryRepositorySQLBoiler{}
 }
 
@@ -58,7 +59,7 @@ func (rep *categoryRepositorySQLBoiler) Create(ctx context.Context, tran *sql.Tx
 }
 
 // 商品カテゴリを変更する
-func (rep *categoryREpositorySQLBoiler) UpdateById(ctx context.Context, tran *sql.Tx, category *categories.Category) errror {
+func (rep *categoryRepositorySQLBoiler) UpdateById(ctx context.Context, tran *sql.Tx, category *categories.Category) error {
 	// 更新対象を取得する
 	up_model, err := models.Categories(qm.Where("obj_id = ?", category.Id().Value())).One(ctx, tran)
 	if up_model == nil {
@@ -84,10 +85,10 @@ func (rep *categoryREpositorySQLBoiler) UpdateById(ctx context.Context, tran *sq
 func (rep *categoryRepositorySQLBoiler) DeleteById(ctx context.Context, tran *sql.Tx, category *categories.Category) error {
 	// 削除対象を取得する
 	del_model, err := models.Categories(
-		qm.Where("obj_id = ?", category.Id().Value()).ONe(ctx, tran))
+		qm.Where("obj_id = ?", category.Id().Value())).One(ctx, tran)
 	if del_model == nil {
 		return errs.NewCRUDError(
-			fmt.Sprintf("カテゴリ番号:%sは存在しないため、削除できませんでした。"))
+			fmt.Sprintf("カテゴリ番号:%sは存在しないため、削除できませんでした。", category.Id().Value()))
 	}
 	if err != nil {
 		return handler.DBErrHandler(err)
@@ -110,7 +111,7 @@ func NewCategoryRepositorySQLBoiler() categories.CategoryRepository {
 
 // 登録処理後に実行されるフック
 func CategoryAfterInsertHook(ctx context.Context, exec boil.ContextExecutor,
-	category *modles.Category,
+	category *models.Category,
 ) error {
 	log.Printf("カテゴリID:%s カテゴリ名:%sを登録しました。\n", category.ObjID, category.Name)
 	return nil

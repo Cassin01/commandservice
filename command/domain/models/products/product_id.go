@@ -1,10 +1,11 @@
 package products
 
 import (
-	"commandservice/errs"
 	"fmt"
 	"regexp"
 	"unicode/utf8"
+
+	"commandservice/errs"
 )
 
 // 商品番号を保持するオブジェクト(UUIDを保持する)

@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"commandservice/infra/sqlboiler/handler"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -19,6 +21,6 @@ var _ = BeforeSuite(func() {
 	absPath, _ := filepath.Abs("../../config/database.toml")
 	// database.tomlファイルにパスを環境変数に設定する
 	os.Setenv("DATABASE_TOML_PATH", absPath)
-	err := hanlder.DBConnect() // データベースに接続する
+	err := handler.DBConnect() // データベースに接続する
 	Expect(err).NotTo(HaveOccurred(), "データベース接続が失敗したのでテストを中止します。")
 })

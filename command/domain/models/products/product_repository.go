@@ -14,5 +14,5 @@ type ProductResitory interface {
 	// 商品を変更する
 	UpdateById(ctx context.Context, tran *sql.Tx, product *Product) error
 	// 商品を削除する
-	DeleteById(ctx context, tran *sql.Tx, product *Product) error
+	DeleteById(ctx context.Context, tran *sql.Tx, product *Product) error
 }
