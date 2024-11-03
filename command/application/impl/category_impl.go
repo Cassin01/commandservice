@@ -8,13 +8,13 @@ import (
 )
 
 // CategoryServiceインターフェイスの実装
-type categorySErviceImpl struct {
+type categoryServiceImpl struct {
 	rep         categories.CategoryRepository
 	transaction // transaction構造体のエンベデッド
 }
 
 // コンストラクタ
-func NewcategoryServiceImpl(rep categories.CategoryRepository) service.CategorySErvice {
+func NewcategoryServiceImpl(rep categories.CategoryRepository) service.CategoryService {
 	return &categoryServiceImpl{rep: rep}
 }
 
@@ -26,12 +26,12 @@ func (ins *categoryServiceImpl) Add(ctx context.Context, category *categories.Ca
 		return err
 	}
 
-	// 実行結果におおじてトランザクションのコミット / ロールバックを制御する
+	// 実行結果に応じてトランザクションのコミットロールバック制御する
 	defer func() {
 		defer ins.complete(tran, err)
 	}()
 
-	// 既に登録済みであるかを確認する
+	// 既に登録済であるか、確認する
 	if err = ins.rep.Exists(ctx, tran, category); err != nil {
 		return err
 	}
@@ -45,14 +45,13 @@ func (ins *categoryServiceImpl) Add(ctx context.Context, category *categories.Ca
 }
 
 // カテゴリを変更する
-func (ins *categorySErviceImpl) Update(ctx context.Context, category *categories.Category) error {
+func (ins *categoryServiceImpl) Update(ctx context.Context, category *categories.Category) error {
 	// トランザクションの開始
 	tran, err := ins.begin(ctx)
 	if err != nil {
-		return nerr
+		return err
 	}
-
-	// 実行結果に応じてトランザクションのコミット / ロールバックを制御する
+	// 実行結果に応じてトランザクションのコミットロールバック制御する
 	defer func() {
 		err = ins.complete(tran, err)
 	}()
@@ -65,14 +64,13 @@ func (ins *categorySErviceImpl) Update(ctx context.Context, category *categories
 }
 
 // カテゴリを削除する
-func (ins *categorySErviceImpl) Dlete(ctx context.Context, category *categories.Category) error {
+func (ins *categoryServiceImpl) Delete(ctx context.Context, category *categories.Category) error {
 	// トランザクションの開始
 	tran, err := ins.begin(ctx)
 	if err != nil {
 		return err
 	}
-
-	// 実行結果に応じてトランザクションのコミット / ロールバック制御する
+	// 実行結果に応じてトランザクションのコミットロールバック制御する
 	defer func() {
 		err = ins.complete(tran, err)
 	}()

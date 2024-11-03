@@ -1,6 +1,7 @@
 package impl_test
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -8,11 +9,15 @@ import (
 	"commandservice/application/service"
 	"commandservice/domain/models/categories"
 	"commandservice/errs"
+
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
+	"go.uber.org/fx"
 )
 
 var _ = Describe("categoryServiceImpl構造体", Ordered, Label("メソッドのテスト"), func() {
 	var category *categories.Category
-	var service service.CategoryServicevar
+	var service service.CategoryService
 	var ctx context.Context
 	var container *fx.App
 
@@ -21,7 +26,7 @@ var _ = Describe("categoryServiceImpl構造体", Ordered, Label("メソッドの
 		// テストデータの作成
 		name, _ := categories.NewCategoryName("飲料水")
 		category, _ = categories.NewCategory(name)
-		ctx = context.BAckground() // Contextの生成
+		ctx = context.Background() // Contextの生成
 		container = fx.New(        // サービスインスタンスの生成
 			application.SrvDepend,
 			fx.Populate(&service),
@@ -44,8 +49,8 @@ var _ = Describe("categoryServiceImpl構造体", Ordered, Label("メソッドの
 		})
 		It("存在するカテゴリ名の場合、errs.CRUDErrorが返る", func() {
 			result := service.Add(ctx, category)
-			Expect(result).To(Equal(errs.CRUDError(
-				fmt.Sprintf("%sは既に登録されています。", category.Name().Value()))))
+			Expect(result).To(Equal(errs.NewCRUDError(
+				fmt.Sprintf("%sはすでに登録されています。", category.Name().Value()))))
 		})
 	})
 
@@ -75,7 +80,7 @@ var _ = Describe("categoryServiceImpl構造体", Ordered, Label("メソッドの
 			name, _ := categories.NewCategoryName("飲料水")
 			del_category, _ := categories.NewCategory(name)
 			result := service.Delete(ctx, del_category)
-			Expect(result).To(Equal(errs.CRUDError(
+			Expect(result).To(Equal(errs.NewCRUDError(
 				fmt.Sprintf("カテゴリ番号:%sは存在しないため、削除できませんでした。", del_category.Id().Value()))))
 		})
 	})

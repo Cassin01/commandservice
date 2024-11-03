@@ -24,7 +24,7 @@ func (inc *transaction) begin(ctx context.Context) (*sql.Tx, error) {
 }
 
 // トランザクションを終了する
-func (ins *transaction) complete(tran *sql.Tx, err error) {
+func (ins *transaction) complete(tran *sql.Tx, err error) error {
 	if err != nil {
 		if e := tran.Rollback(); e != nil {
 			return handler.DBErrHandler(err)

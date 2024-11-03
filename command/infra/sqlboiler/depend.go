@@ -1,7 +1,7 @@
 package sqlboiler
 
 import (
-	"commandservice/infra/sqlboiler/respository"
+	"commandservice/infra/sqlboiler/repository"
 
 	"go.uber.org/fx"
 )
@@ -10,7 +10,7 @@ import (
 var RepDepend = fx.Options(
 	fx.Provide(
 		// Repositoryインターフェイス実装のコンストラクタを指定
-		respository.NewcategoryRepositorySQLBoiler, // カテゴリ用Repository
-		respository.NewproductRepositorySQLBoiler,  // 商品用Repository
+		repository.NewcategoryRepositorySQLBoiler, // カテゴリ用Reposititory
+		repository.NewproductRepositorySQLBoiler,  // 商品用Repository
 	),
 )
