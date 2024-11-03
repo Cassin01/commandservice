@@ -9,7 +9,7 @@ import (
 
 // アプリケーション層の依存定義
 var SrvDepend = fx.Options(
-	sqlboiler.RepDepend, // SQLBoilerを利用したリポジトリインターフェイス実行
+	sqlboiler.RepDepend, // SQLBoilderを利用したリポジトリインターフェイス実装
 	fx.Provide(
 		// サービスインターフェイス実装のコンストラクタ
 		impl.NewcategoryServiceImpl,
