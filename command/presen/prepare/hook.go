@@ -1,6 +1,7 @@
 package prepare
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -12,7 +13,7 @@ import (
 )
 
 func CommandServiceLifecycle(lifecycle fx.Lifecycle, server *CommandServer) {
-	linecycle.Append(fx.Hook{
+	lifecycle.Append(fx.Hook{
 		// fx起動時の処理
 		OnStart: func(ctx context.Context) error {
 			// データベース接続とコネクションプールを生成する
