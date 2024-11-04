@@ -35,7 +35,7 @@ func CommandServiceLifecycle(lifecycle fx.Lifecycle, server *CommandServer) {
 			return nil
 		},
 		// fx終了時の処理
-		OnStop: func(ctx context.Cotnext) error {
+		OnStop: func(ctx context.Context) error {
 			server.Server.GracefulStop() // サーバを停止する
 			log.Println("Command Server 停止")
 			return nil
